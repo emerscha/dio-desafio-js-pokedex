@@ -7,10 +7,16 @@ body {
     background-color: #f6f8fc;
 }
 
-.content {
+#pagePokemonList.content {
     width: 100vw;
     height: 100vh;
     padding: 1rem;
+    background-color: #fff;
+}
+
+#pagePokemonDetail.content {
+    width: 100vw;
+    height: 100vh;
     background-color: #fff;
 }
 

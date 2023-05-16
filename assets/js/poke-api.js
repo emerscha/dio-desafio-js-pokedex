@@ -31,6 +31,8 @@ function convertPokeApiDetailToPokemon(pokeDetail) {
     const moves = pokeDetail.moves.map((move) => move.move.name)
     pokemon.moves = moves
 
+    console.log(pokemon)
+
     return pokemon
 }
 
@@ -42,22 +44,11 @@ pokeApi.getPokemonDetail = (pokemon) => {
 
 pokeApi.getPokemons = (offset = 0, limit = 5) => {
     const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`
-
+    
     return fetch(url)
         .then((response) => response.json())
         .then((jsonBody) => jsonBody.results)
         .then((pokemons) => pokemons.map(pokeApi.getPokemonDetail))
-        .then((detailRequests) => Promise.all(detailRequests))
-        .then((pokemonsDetails) => pokemonsDetails)
-}
-
-pokeApi.getPokemon = (pokemonId) => {
-    const url = `https://pokeapi.co/api/v2/pokemon/${pokemonId}`;
-
-    return fetch(url)
-        .then((response) => response.json())
-        .then((jsonBody) => jsonBody.results)
-        .then((details) => details.map(pokeApi.getPokemonDetail))
         .then((detailRequests) => Promise.all(detailRequests))
         .then((pokemonsDetails) => pokemonsDetails)
 }
