@@ -16,7 +16,9 @@ async function convertPokeApiDetailToPokemon(pokeDetail) {
 
     pokemon.photo = pokeDetail.sprites.other['official-artwork'].front_default
 
-    pokemon.description = await pokeApi.getPokemonDescription(pokemon.number)
+    description = await pokeApi.getPokemonDescription(pokemon.number)
+
+    pokemon.description = description.replace(/[\uE000-\uF8FF-\u000c]/g, '')
 
     const abilities = pokeDetail.abilities.map((ability) => ability.ability.name)
     pokemon.abilities = abilities
@@ -59,7 +61,7 @@ pokeApi.getPokemonDescription = (pokemonId) => {
     let pokemonDescription = fetch(url)
             .then((response) => {return response.json()})
             .then((responseData) => {
-                let description = responseData.flavor_text_entries[0].flavor_text
+                let description = responseData.flavor_text_entries[1].flavor_text
                 return description
             })
     return pokemonDescription
