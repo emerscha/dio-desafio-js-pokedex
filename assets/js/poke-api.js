@@ -3,7 +3,7 @@ const pokemonId = urlSearchParams.get('id')
 
 const pokeApi = {}
 
-function convertPokeApiDetailToPokemon(pokeDetail) {
+async function convertPokeApiDetailToPokemon(pokeDetail) {
     const pokemon = new Pokemon()
     pokemon.number = pokeDetail.id
     pokemon.name = pokeDetail.name
@@ -15,6 +15,8 @@ function convertPokeApiDetailToPokemon(pokeDetail) {
     pokemon.types = types    
 
     pokemon.photo = pokeDetail.sprites.other['official-artwork'].front_default
+
+    pokemon.description = await pokeApi.getPokemonDescription(pokemon.number)
 
     const abilities = pokeDetail.abilities.map((ability) => ability.ability.name)
     pokemon.abilities = abilities
@@ -30,8 +32,6 @@ function convertPokeApiDetailToPokemon(pokeDetail) {
 
     const moves = pokeDetail.moves.map((move) => move.move.name)
     pokemon.moves = moves
-
-    console.log(pokemon)
 
     return pokemon
 }
@@ -52,3 +52,16 @@ pokeApi.getPokemons = (offset = 0, limit = 5) => {
         .then((detailRequests) => Promise.all(detailRequests))
         .then((pokemonsDetails) => pokemonsDetails)
 }
+
+pokeApi.getPokemonDescription = (pokemonId) => {
+    const url = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`
+
+    let pokemonDescription = fetch(url)
+            .then((response) => {return response.json()})
+            .then((responseData) => {
+                let description = responseData.flavor_text_entries[0].flavor_text
+                return description
+            })
+    return pokemonDescription
+}
+
